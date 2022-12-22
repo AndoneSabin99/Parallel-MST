@@ -1,10 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <omp.h>
+#include <mpi.h>
 #include <time.h>
 #include <assert.h>
-#include <mpi.h>
 
 typedef struct edge {
     int u, v, w;
@@ -74,17 +73,8 @@ void merge_sort(edge edges[], int n, int (*comparison)(edge*, edge*)) {
         memcpy(larr, edges, m * sizeof(edge));
         memcpy(rarr, edges + m, (n - m) * sizeof(edge));
 
-        #pragma omp parallel
-        {
-            #pragma omp single
-            {
-                #pragma omp task shared(larr, m, comparison)
-                merge_sort(larr, m, comparison);
-
-                #pragma omp task shared(rarr, n, m, comparison)
-                merge_sort(rarr, n - m, comparison);
-            }
-        }
+        merge_sort(larr, m, comparison);
+        merge_sort(rarr, n - m, comparison);
 
         merge(edges, larr, m, rarr, n - m, comparison, 0);
         free(larr); free(rarr);
@@ -94,7 +84,6 @@ void merge_sort(edge edges[], int n, int (*comparison)(edge*, edge*)) {
 void merge_gather(edge gather[], int sendcounts[], int displ[], int (*comparison)(edge*, edge*), int l, int r) {
     if (l >= r) return;
     int mid = (l + r) >> 1;
-    //TO DO: need to check if we can apply openmp also here
     merge_gather(gather, sendcounts, displ, comparison, l, mid);
     merge_gather(gather, sendcounts, displ, comparison, mid + 1, r);
     int nl = 0, nr = 0;
@@ -130,33 +119,15 @@ int main(int argc, char** argv) {
     // Commit type
     MPI_Type_commit(&MPI_EDGE);
 
-
-    //getting number of threads for OpenMP
-    int num_thread = omp_get_max_threads();
-    // omp_set_max_active_levels(omp_get_max_threads());
-
     // Input
-    //TO DO : need to change this according to our project, either with .csv or .txt file
-    //in this case just read from a file the number of nodes and the values of weights
-
-    FILE *graphFile;
-    graphFile = fopen(argv[1], "r");
-
-    if (graphFile == NULL){
-        printf("Error Reading File\n");
-        exit (0);
-    }
-
-    //t variable is used in order to track the time from where the program starts its execution
     clock_t t = clock();
     if (world_rank == 0) {
-        int n, x;
-        fscanf(graphFile, "%d", &n);
+        scanf("%d", &n);
         edges = (edge*) malloc(n * (n + 1) / 2 * sizeof(edge));
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 int x;
-                fscanf(graphFile, "%d", &x);
+                scanf("%d", &x);
                 if (x == -1) continue;
                 if (i >= j) continue;
                 edges[num_edge].u = i;
@@ -167,18 +138,14 @@ int main(int argc, char** argv) {
         }
         assert(num_edge >= n - 1);
     }
-    fclose(graphFile);
     MPI_Barrier(MPI_COMM_WORLD);
 
-    //send the input to the other nodes
     if (world_rank == 0) {
         for (int i = 1; i < world_size; i++)
             MPI_Send(&num_edge, 1, MPI_INT, i, 0, MPI_COMM_WORLD);
     } else {
         MPI_Recv(&num_edge, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     }
-
-    
 
     // Process
     {
@@ -285,7 +252,7 @@ int main(int argc, char** argv) {
             printf("%d-%d\n", chosen_edges[i].u, chosen_edges[i].v);
         }
         double time_taken = ((double) (clock() - t)) / CLOCKS_PER_SEC;
-        printf("Time taken: %f ms\n", time_taken);
+        printf("Waktu Eksekusi: %f ms\n", time_taken);
     }
     MPI_Barrier(MPI_COMM_WORLD);
 

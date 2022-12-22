@@ -1,0 +1,1 @@
+/var/spool/pbs/mom_priv/jobs/9077475.hpc-head-n1.unitn.it.SC: line 7: 14016 Segmentation fault      (core dumped) /home/sabin.andone/Parallel-MST/mst_mpi /home/sabin.andone/Parallel-MST/graph.txt

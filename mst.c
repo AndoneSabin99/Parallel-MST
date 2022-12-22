@@ -6,6 +6,7 @@
 #include <string.h>
 #include <time.h>
 #include <mpi.h>
+#include <omp.h>
 
 const int UNSET_ELEMENT = -1;
 
@@ -191,8 +192,23 @@ void mergeSort(int* edgeList, const int start, const int end) {
 	if (start != end) {
 		// recursively divide the list in two parts and sort them
 		int pivot = (start + end) / 2;
-		mergeSort(edgeList, start, pivot);
-		mergeSort(edgeList, pivot + 1, end);
+
+		#pragma omp parallel
+		{
+            #pragma omp single
+            {
+				#pragma omp task shared(edgeList, pivot)
+				{
+					mergeSort(edgeList, start, pivot);
+				}
+				
+				#pragma omp task shared(edgeList, pivot)
+				{
+					mergeSort(edgeList, pivot + 1, end);
+				}
+				
+			}
+		}
 
 		merge(edgeList, start, end, pivot);
 	}
