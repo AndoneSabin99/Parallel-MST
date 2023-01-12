@@ -136,7 +136,7 @@ int main(int argc, char** argv) {
     // omp_set_max_active_levels(omp_get_max_threads());
 
     // Input
-    //TO DO : need to change this according to our project, either with .csv or .txt file
+    //TO DO: need to change this according to our project, either with .csv or .txt file
     //in this case just read from a file the number of nodes and the values of weights
 
     FILE *graphFile;
