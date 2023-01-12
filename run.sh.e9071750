@@ -1,1 +1,0 @@
-[proxy:0:0@hpc-c11-node18.unitn.it] HYDU_create_process (utils/launch/launch.c:75): execvp error on file /home/b.ganbold/HPC/Parallel-MST/mst (No such file or directory)
