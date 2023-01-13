@@ -5,4 +5,4 @@
 # imposta la coda di esecuzione
 #PBS -q short_cpuQ
 module load mpich-3.2
-mpirun.actual  /home/sabin.andone/Parallel-MST/mst /home/sabin.andone/Parallel-MST/graph.txt -np 4
+mpirun.actual -np 4 /home/sabin.andone/Parallel-MST/mst /home/sabin.andone/Parallel-MST/graph.txt 8
