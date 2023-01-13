@@ -18,4 +18,4 @@ qsub run.sh
 
 To run directly (not recommended to do this directly on the login node of the hpc cluster
 
-mpirun.actual -np 4 <complete_path/mst> <complete_path_input_file> 8
+mpirun.actual -np 4 <complete_path/mst> <complete_path_input_file> 4
