@@ -16,11 +16,15 @@ mpicc -std=gnu99 -g -Wall -fopenmp -c sort.c -o sort.o
 
 mpicc -std=gnu99 -g -Wall -fopenmp -c mst.c -o mst.o
 
+
+
 Then create the library files for the sort and data_structure files:
 
 ar rcs libsort.a sort.o
 
 ar rcs libdata_structures.a data_structures.o
+
+
 
 Then, once we have compiled all the files, create the executable file:
 
