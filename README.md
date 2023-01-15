@@ -6,17 +6,20 @@ This project implements the Kruskal's algorithm for creating a minimum spanning 
 
 Kruskal's algorithm works as following: first sort all the edges via parallelized sorting algorithm (for this project, merge sort has been choosen as the sorting algorithm); then, keep track of the components via union-find data structures with union by rank and path compression.
 
-## Commands to compile and run
+## Commands to compile
 
 First compile the .c files like following:
 
 gcc -c -g data_structures.c -o data_structures.o
+
 mpicc -std=gnu99 -g -Wall -fopenmp -c sort.c -o sort.o
+
 mpicc -std=gnu99 -g -Wall -fopenmp -c mst.c -o mst.o
 
 Then create the library files for the sort and data_structure files:
 
 ar rcs libsort.a sort.o
+
 ar rcs libdata_structures.a data_structures.o
 
 Then, once we have compiled all the files, create the executable file:
@@ -24,7 +27,7 @@ Then, once we have compiled all the files, create the executable file:
 mpicc -std=gnu99 -g -Wall -fopenmp -o mst mst.o data_structures.o sort.o -L<path_libraries> -lsort -ldata_structures
 
 
-To run (inside an hpc cluster that works with jobs):
+## Commands to run (inside an hpc cluster that works with jobs):
 
 qsub run.sh
 
