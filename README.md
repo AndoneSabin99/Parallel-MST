@@ -10,18 +10,15 @@ Kruskal's algorithm works as following: first sort all the edges via parallelize
 
 First compile the .c files like following:
 
-gcc -c -g data_structures.c -o data_structures.o
-
-mpicc -std=gnu99 -g -Wall -fopenmp -c sort.c -o sort.o
-
-mpicc -std=gnu99 -g -Wall -fopenmp -c mst.c -o mst.o
+gcc -c -g data_structures.c -o data_structures.o <br />
+mpicc -std=gnu99 -g -Wall -fopenmp -c sort.c -o sort.o <br />
+mpicc -std=gnu99 -g -Wall -fopenmp -c mst.c -o mst.o <br />
 
 
 
 Then create the library files for the sort and data_structure files:
 
-ar rcs libsort.a sort.o
-
+ar rcs libsort.a sort.o <br />
 ar rcs libdata_structures.a data_structures.o
 
 
