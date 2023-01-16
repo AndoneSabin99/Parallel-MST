@@ -12,7 +12,7 @@ In this repository it is possible to navigate through two directories:
 1) one for the source code <br />
 2) one for the dataset, which contains some .txt files with input graphs <br />
 
-Inside the src folder, it is possible to find the source files of the program, together with the libraries and also one example of output of an instance of execution.
+In this repository it is possible to find the source files of the program, together with the libraries and also one example of output of an instance of execution.
 
 
 ## Commands to compile
