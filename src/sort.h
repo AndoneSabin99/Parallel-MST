@@ -21,7 +21,10 @@
 void merge(int* edgeList, const int start, const int end, const int pivot);
 
 //sort the edge list using merge sort algorithm, start and end are inclusive
-void mergeSort(int* edgeList, const int start, const int end);
+void mergeSort_omp(int* edgeList, const int start, const int end, int threads);
+
+//sort the edge list using merge sort algorithm, start and end are inclusive
+void mergeSort_serial(int* edgeList, const int start, const int end);
 
 //send the edge list of the graph from one process to all other processes in a communicator
 void scatterEdgeList(int* edgeList, int* edgeListPart, const int elements,int* elementsPart);

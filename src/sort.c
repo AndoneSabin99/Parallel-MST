@@ -46,12 +46,38 @@ void merge(int* edgeList, const int start, const int end, const int pivot) {
 }
 
 //sort the edge list using merge sort algorithm, start and end are inclusive
-void mergeSort(int* edgeList, const int start, const int end) {
+void mergeSort_omp(int* edgeList, const int start, const int end, int threads) {
+
+	if (threads == 1){
+		mergeSort_serial(edgeList, start, end);	
+	}else{
+		if (start != end) {
+			//recursively divide the list in two parts and sort them
+			int pivot = (start + end) / 2;
+			#pragma omp parallel sections
+			{
+					#pragma omp section
+					{
+						mergeSort_omp(edgeList, start, pivot, threads/2);
+					}
+
+					#pragma omp section
+					{
+						mergeSort_omp(edgeList, pivot + 1, end, threads - threads/2);
+					}
+			}	
+			merge(edgeList, start, end, pivot);
+		}
+	}
+}
+
+//sort the edge list using merge sort algorithm, start and end are inclusive
+void mergeSort_serial(int* edgeList, const int start, const int end) {
 	if (start != end) {
 		//recursively divide the list in two parts and sort them
 		int pivot = (start + end) / 2;
-		mergeSort(edgeList, start, pivot);
-		mergeSort(edgeList, pivot + 1, end);
+		mergeSort_serial(edgeList, start, pivot);
+		mergeSort_serial(edgeList, pivot + 1, end);
 
 		merge(edgeList, start, end, pivot);
 	}
@@ -113,7 +139,7 @@ void sort(Graph* graph) {
 	scatterEdgeList(graph->edgeList, edgeListPart, elements, &elementsPart);
 
 	//sorting step 
-	mergeSort(edgeListPart, 0, elementsPart - 1);
+	mergeSort_omp(edgeListPart, 0, elementsPart - 1, omp_get_num_threads());
 
 	//merge all parts
 	int from;
